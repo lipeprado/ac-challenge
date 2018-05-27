@@ -8,6 +8,8 @@ import configureStore from "./store/configureStore";
 import App from "./components/App";
 import "jquery/dist/jquery";
 import "css-reset-and-normalize-sass";
+import "emoji-mart/css/emoji-mart.css";
+import "font-awesome/css/font-awesome.css";
 import "./static/styles/global.sass";
 
 const store = configureStore();
