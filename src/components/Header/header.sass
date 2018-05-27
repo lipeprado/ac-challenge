@@ -1,0 +1,30 @@
+@import '../../static/styles/colors';
+
+.wrapperHeader
+  width: 100%
+  display: flex
+  justify-content: space-between
+  background-color: white
+  padding: 2rem 1rem
+  .titles
+    display: flex
+    align-items: center
+    .logo
+      color: $main_color
+      font-family: "Montserrat-bold"
+      font-size: 1rem
+      margin-right: .5rem
+    .tagline
+      color: $details
+      font-family: "Montserrat-Regular"
+      font-size: 12px
+      position: relative
+      margin-left: .5rem
+      &:before
+        content: ""
+        width: 2px
+        height: 100%
+        background-color: $main_color
+        position: absolute
+        top: 0
+        left: -.5rem
