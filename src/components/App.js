@@ -130,7 +130,7 @@ class App extends Component {
   onLoading() {
     return (
       <div className={styles.onLoading}>
-        <h5>Carregando </h5>
+        <h5>Loading </h5>
         <FontAwesome name="smile-o" spin />
       </div>
     );
