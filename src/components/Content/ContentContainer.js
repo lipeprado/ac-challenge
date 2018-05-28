@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import _ from "lodash";
+import toastr from "toastr";
 import FontAwesome from "react-fontawesome";
 
 import styles from "./content.sass";
@@ -11,6 +12,12 @@ class ContentContainer extends Component {
     super(props, context);
 
     this.renderHost = this.renderHost.bind(this);
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.error !== "") {
+      toastr.error(nextProps.error);
+    }
   }
 
   renderHost() {
@@ -108,15 +115,18 @@ class ContentContainer extends Component {
   }
 
   render() {
-    const { hostData } = this.props;
-    console.log("host", hostData);
-
+    const { hostData, error } = this.props;
     return (
       <div>
         {_.isEmpty(hostData) ? (
-          <div className={styles.inserUrl}>
-            <FontAwesome name="smile-o" className={styles.sadIcon} />
-            <h3>Faça sua Busca. Insira um Dominio</h3>
+          <div className={error ? styles.url_error : styles.url_set}>
+            <FontAwesome
+              name={error !== "" ? "frown-o" : "smile-o"}
+              className={styles.sadIcon}
+            />
+            <h3>
+              {error !== "" ? error : "Faça sua Busca. Insira um Dominio"}
+            </h3>
           </div>
         ) : (
           this.renderHost()
@@ -129,7 +139,8 @@ class ContentContainer extends Component {
 ContentContainer.propTypes = {
   hostData: PropTypes.object.isRequired,
   hostName: PropTypes.string,
-  history: PropTypes.object.isRequired
+  history: PropTypes.object.isRequired,
+  error: PropTypes.string
 };
 
 export default withRouter(ContentContainer);
