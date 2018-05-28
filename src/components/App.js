@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import FontAwesome from "react-fontawesome";
+import toastr from "toastr";
 
 //Components
 import Header from "./Header/HeaderContainer";
@@ -25,6 +26,7 @@ class App extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.onLoading = this.onLoading.bind(this);
+    this.onClear = this.onClear.bind(this);
   }
 
   handleChange(e) {
@@ -51,26 +53,38 @@ class App extends Component {
     if (withWWW == null || withouWWW == null) return false;
     else return true;
   }
+
   async handleSubmit() {
     const { host } = this.state;
-    let newHost = "";
-    if (host.includes("https://")) {
-      newHost = host.slice(8);
-    }
-    if (host.includes("http://")) {
-      newHost = host.slice(7);
-    }
-    if (!this.isUrlValid(newHost)) {
-      return this.setState({
-        error: "Por favor, insira uma url válida."
+    if (host === "") {
+      this.setState({
+        error: "Por favor, insira uma URL válida!"
       });
+      return;
+    }
+    let finalUrl = host;
+    let newHost = "";
+
+    const hostArr = [...finalUrl];
+    const { length } = hostArr;
+
+    if (hostArr[length - 1] == "/") {
+      hostArr.pop();
+      finalUrl = hostArr.join("");
+    }
+    if (finalUrl.includes("https://")) {
+      newHost = finalUrl.slice(8);
+    } else if (finalUrl.includes("http://")) {
+      newHost = finalUrl.slice(7);
     }
 
+    const newUrl = newHost !== "" ? newHost : finalUrl;
+    !this.isUrlValid(newUrl);
     try {
       this.setState({
         loading: true
       });
-      const response = await Api.get(`${newHost}?access_key=${KEY}`);
+      const response = await Api.get(`${newUrl}?access_key=${KEY}`);
       if (response.status === 200) {
         this.setState({
           hostData: response.data
@@ -87,6 +101,15 @@ class App extends Component {
     }
   }
 
+  onClear() {
+    this.setState({
+      hostData: {},
+      error: "",
+      host: "",
+      loading: false
+    });
+    toastr.info("Operação de Limpeza foi realizada com Sucesso!");
+  }
   onLoading() {
     return (
       <div className={styles.onLoading}>
@@ -102,6 +125,7 @@ class App extends Component {
         <Header />
         <Locate
           host={host}
+          onClear={this.onClear}
           onKeyDown={this.handleKeyDown}
           onSubmit={this.handleSubmit}
           onChange={this.handleChange}

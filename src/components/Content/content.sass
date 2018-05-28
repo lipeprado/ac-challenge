@@ -1,6 +1,6 @@
 @import '../../static/styles/colors'
 
-.inserUrl
+.url_set
   width: 100%
   margin-top: 8%
   padding: 1rem
@@ -13,6 +13,14 @@
     color: $highlight
     font-family: "Montserrat-Regular"
     font-size: 1.5rem
+
+.url_error
+  @extend .url_set
+  h3
+    color: red
+  .sadIcon
+    color: red
+
 .tableHeader
   display: flex
   justify-content: center
