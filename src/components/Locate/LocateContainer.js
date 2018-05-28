@@ -5,7 +5,14 @@ import styles from "./locate.sass";
 
 class LocateContainer extends Component {
   render() {
-    const { onChange, onKeyDown, host, onSubmit, onClear } = this.props;
+    const {
+      onChange,
+      onKeyDown,
+      host,
+      onSubmit,
+      onClear,
+      myLocation
+    } = this.props;
     return (
       <div className={styles.wrapperLocate}>
         <div className={styles.input_container}>
@@ -14,16 +21,16 @@ class LocateContainer extends Component {
             onChange={onChange}
             value={host}
             onKeyDown={onKeyDown}
-            placeholder="Enter with a domain here"
+            placeholder="Insert a domain."
             className={host !== "" ? styles.input_open : styles.input}
           />
           <button onClick={onSubmit} className={styles.locate}>
             <FontAwesome name="search" className={styles.mag} />
-            <span>Localizar website</span>
+            <span>Locate Domain</span>
           </button>
-          <button onClick={onSubmit} className={styles.myLocate}>
+          <button onClick={myLocation} className={styles.myLocate}>
             <FontAwesome name="home" className={styles.home} />
-            <span>Minha Localização</span>
+            <span>My Location</span>
           </button>
           <FontAwesome
             onClick={onClear}
@@ -39,6 +46,7 @@ class LocateContainer extends Component {
 LocateContainer.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  myLocation: PropTypes.func.isRequired,
   onKeyDown: PropTypes.func.isRequired,
   host: PropTypes.string.isRequired,
   onClear: PropTypes.func.isRequired

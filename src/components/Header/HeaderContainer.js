@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-import { Emoji } from "emoji-mart";
-
 import styles from "./header.sass";
 
 class HeaderContainer extends Component {
@@ -12,10 +10,6 @@ class HeaderContainer extends Component {
           <span className={styles.tagline}>
             Enter a host and know your location
           </span>
-        </div>
-        <div className={styles.languages}>
-          <Emoji emoji=":flag-br:" size={20} />
-          <Emoji emoji=":flag-us:" size={20} />
         </div>
       </div>
     );

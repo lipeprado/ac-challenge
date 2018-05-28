@@ -1,8 +1,5 @@
 import { combineReducers } from "redux";
-import location from "./locationReducer";
 
-const appReducer = combineReducers({
-  location
-});
+const appReducer = combineReducers({});
 
 export default appReducer;

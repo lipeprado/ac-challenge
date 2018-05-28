@@ -27,6 +27,7 @@ class App extends Component {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.onLoading = this.onLoading.bind(this);
     this.onClear = this.onClear.bind(this);
+    this.myLocation = this.myLocation.bind(this);
   }
 
   handleChange(e) {
@@ -37,7 +38,7 @@ class App extends Component {
   }
 
   handleKeyDown(e) {
-    if ([13, 188, 191].indexOf(e.keyCode) !== -1) {
+    if ([13].indexOf(e.keyCode) !== -1) {
       e.preventDefault();
       this.handleSubmit();
     }
@@ -50,15 +51,21 @@ class App extends Component {
     const withouWWW = host.match(
       /[-a-zA-Z0-9@:%.+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%+.~#?&//=]*)/g
     );
-    if (withWWW == null || withouWWW == null) return false;
-    else return true;
+    if (withWWW == null || withouWWW == null) {
+      this.setState({
+        error: "Por favor, insira uma Url válida."
+      });
+      return false;
+    } else {
+      return true;
+    }
   }
 
   async handleSubmit() {
     const { host } = this.state;
-    if (host === "") {
+    if (!host) {
       this.setState({
-        error: "Por favor, insira uma URL válida!"
+        error: "Por favor, insira algum domínio!"
       });
       return;
     }
@@ -74,25 +81,19 @@ class App extends Component {
     }
     if (finalUrl.includes("https://")) {
       newHost = finalUrl.slice(8);
+      this.isUrlValid(newHost);
     } else if (finalUrl.includes("http://")) {
       newHost = finalUrl.slice(7);
     }
-
     const newUrl = newHost !== "" ? newHost : finalUrl;
-    !this.isUrlValid(newUrl);
+    if (!this.isUrlValid(newUrl)) return;
     try {
-      this.setState({
-        loading: true
-      });
+      this.setState({ loading: true });
       const response = await Api.get(`${newUrl}?access_key=${KEY}`);
       if (response.status === 200) {
-        this.setState({
-          hostData: response.data
-        });
+        this.setState({ hostData: response.data });
       }
-      this.setState({
-        loading: false
-      });
+      this.setState({ loading: false });
     } catch (error) {
       this.setState({
         loading: false,
@@ -101,6 +102,21 @@ class App extends Component {
     }
   }
 
+  async myLocation() {
+    try {
+      this.setState({ loading: true, host: "" });
+      const response = await Api.get(`check?access_key=${KEY}`);
+      if (response.status === 200) {
+        this.setState({ hostData: response.data });
+      }
+      this.setState({ loading: false });
+    } catch (error) {
+      this.setState({
+        loading: false,
+        error: "Ops, Algo de Errado Aconteceu."
+      });
+    }
+  }
   onClear() {
     this.setState({
       hostData: {},
@@ -110,6 +126,7 @@ class App extends Component {
     });
     toastr.info("Operação de Limpeza foi realizada com Sucesso!");
   }
+
   onLoading() {
     return (
       <div className={styles.onLoading}>
@@ -127,6 +144,7 @@ class App extends Component {
           host={host}
           onClear={this.onClear}
           onKeyDown={this.handleKeyDown}
+          myLocation={this.myLocation}
           onSubmit={this.handleSubmit}
           onChange={this.handleChange}
         />
